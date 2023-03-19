@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2beta17
+kind: Config
+metadata:
+  name: billing-service
+build:
+  local:
+    useBuildkit: true
+  artifacts:
+  - image: dev/billing-service
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - deployment.yaml
+portForward:
+- resourceType: service
+  resourceName: billing-service
+  port: 8050
