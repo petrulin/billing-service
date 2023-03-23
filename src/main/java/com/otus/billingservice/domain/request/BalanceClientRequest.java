@@ -15,4 +15,5 @@ public class BalanceClientRequest {
     private String username;
     private BigDecimal amount;
 
+
 }

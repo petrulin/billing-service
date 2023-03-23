@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.otus.billingservice.domain.request.BalanceClientRequest;
 import com.otus.billingservice.domain.response.SimpeResponse;
 import com.otus.billingservice.entity.Message;
+import com.otus.billingservice.error.NotEnoughMoneyException;
 import com.otus.billingservice.rabbitmq.domain.RMessage;
 import com.otus.billingservice.rabbitmq.domain.dto.CancelDTO;
 import com.otus.billingservice.rabbitmq.domain.dto.TrxDTO;
@@ -55,8 +56,10 @@ public class QueueListener {
                         try {
                             billingService.balanceWithdraw(new BalanceClientRequest(trxDTO.getOrder().getUserName(), trxDTO.getOrder().getAmount()));
                             trxDTO.setPayStatus("Ok");
+                        } catch (NotEnoughMoneyException ex) {
+                            trxDTO.setPayStatus("Недостаточно средств на балансе клиента");
                         } catch (Exception ex) {
-                            trxDTO.setPayStatus(ex.getLocalizedMessage());
+                            trxDTO.setPayStatus("Ошибка оплаты");
                             //answer = new SimpeResponse("ERROR", ex.getLocalizedMessage());
                         }
                         rt.convertAndSend(answerExchange, answerQueue,

@@ -3,7 +3,10 @@ package com.otus.billingservice.controller;
 
 import com.otus.billingservice.domain.request.BalanceClientRequest;
 import com.otus.billingservice.domain.request.RegisterClientRequest;
+import com.otus.billingservice.domain.response.BalanceClientResponse;
 import com.otus.billingservice.domain.response.SimpeResponse;
+import com.otus.billingservice.entity.Client;
+import com.otus.billingservice.error.ApplicationError;
 import com.otus.billingservice.service.BillingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,15 @@ public class BillingController {
             return ResponseEntity.ok(new SimpeResponse("OK", ""));
         } catch (Exception ex) {
             return ResponseEntity.ok(new SimpeResponse("ERROR", ex.getLocalizedMessage()));
+        }
+    }
+    @PostMapping(path = "/balance/get")
+    public ResponseEntity<BalanceClientResponse> newClient(@RequestBody BalanceClientRequest balanceClientRequest) {
+        try {
+            Client client = bs.getBalance(balanceClientRequest);
+            return ResponseEntity.ok(new BalanceClientResponse(client.getUserName(), client.getBalance()));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(new BalanceClientResponse(ApplicationError.INTERNAL_ERROR));
         }
     }
 

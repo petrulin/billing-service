@@ -46,15 +46,22 @@ public class BillingServiceImpl implements BillingService {
         if (client == null) {
             throw new ClientNotFoudException();
         }
-        client.setBalance(client.getBalance().subtract(balanceClientRequest.getAmount()));
 
-        if ((client.getBalance().compareTo(BigDecimal.ZERO) < 0)) {
+        if ((client.getBalance().subtract(balanceClientRequest.getAmount()).compareTo(BigDecimal.ZERO) < 0)) {
             throw new NotEnoughMoneyException();
         } else {
+            client.setBalance(client.getBalance().subtract(balanceClientRequest.getAmount()));
             clientRepository.save(client);
         }
     }
-
+    @Override
+    public Client getBalance(BalanceClientRequest balanceClientRequest) throws ClientNotFoudException {
+        Client client = clientRepository.findClientByUserNameAndCurrency(balanceClientRequest.getUsername(), 933);
+        if (client == null) {
+            throw new ClientNotFoudException();
+        }
+        return client;
+    }
 
 
 }

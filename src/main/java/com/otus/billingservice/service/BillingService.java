@@ -2,6 +2,7 @@ package com.otus.billingservice.service;
 
 import com.otus.billingservice.domain.request.BalanceClientRequest;
 import com.otus.billingservice.domain.request.RegisterClientRequest;
+import com.otus.billingservice.entity.Client;
 import com.otus.billingservice.error.ClientNotFoudException;
 import com.otus.billingservice.error.NotEnoughMoneyException;
 import com.otus.billingservice.rabbitmq.domain.dto.CancelDTO;
@@ -12,4 +13,5 @@ public interface BillingService {
     void createClient(RegisterClientRequest clientRequest);
     void balanceAdd(BalanceClientRequest balanceClientRequest) throws ClientNotFoudException;
     void balanceWithdraw(BalanceClientRequest balanceClientRequest) throws ClientNotFoudException, NotEnoughMoneyException;
+    Client getBalance(BalanceClientRequest balanceClientRequest) throws ClientNotFoudException;
 }
